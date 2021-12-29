@@ -29,34 +29,42 @@ module.exports = {
 					['Watch Together', '880218394199220334'],
 					['Word Snacks', '879863976006127627'],
 				],
-			).setRequired(true)).addChannelOption(ch => ch.addChannelType(2).setName('channel').setDescription('Where do you want to start the activity?'))),
+			).setRequired(true))),
 
 	async execute(interaction) {
 
 		// Get channel id
-		let channel_vc_id = interaction.options.getChannel('channel');
+		let channel_vc_id = null;
 
-		if (channel_vc_id != null) {
-			channel_vc_id = channel_vc_id.id;
+
+		channel_vc_id = interaction.member.voice.channelId;
+		if (channel_vc_id == null) {
+
+			const j_vc_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
+				'**You must join a voice channel first to use this command**',
+			).setTitle('❌ Member Context Error').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL(),
+			);
+
+			return interaction.reply(
+				{ embeds:  [j_vc_embed] },
+			);
 		}
-		else {
 
-			channel_vc_id = interaction.member.voice.channelId;
-			if (channel_vc_id == null) {
-
-				const j_vc_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
-					'**You must join a voice channel first to use this command**',
-				).setTitle('❌ Member Context Error').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL(),
-				);
-
-				return interaction.reply(
-					{ embeds:  [j_vc_embed] },
-				);
-			}
-		}
 
 		// Check permissions
 		const bot_permissions = interaction.member.voice.channel.permissionsFor(interaction.member.guild.me);
+		const member_permissions = interaction.member.voice.channel.permissionsFor(interaction.member);
+
+		if (!member_permissions.has('START_EMBEDDED_ACTIVITIES')) {
+			const m_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
+				'**Please ensure that you have [Start Activity](https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ) permissions in <#' + channel_vc_id + '> to execute this command**',
+			).setTitle('❌ Member Permissions Error').setURL('https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL());
+
+			return interaction.reply(
+				{ embeds:  [m_embed] },
+			);
+		}
+
 		const p_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
 			'**Please ensure that the [View Channel](https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ), [Create Invite](https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ) and [Start Activity](https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ) permissions for this bot are enabled in <#' + channel_vc_id + '> to execute this command**',
 		).setTitle('❌ Bot Permissions Error').setURL('https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL());

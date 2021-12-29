@@ -1,0 +1,41 @@
+{
+    "name": "code-server-heroku",
+    "description": "A code-server environment designed to run in your Heroku",
+    "repository": "https://github.com/PWRScript/TaritaX",
+    "logo": "https://avatars.githubusercontent.com/u/1375?s=200&v=4",
+    "keywords": [
+      "node",
+      "express",
+      "code-server",
+      "cloud-development",
+      "heroku-api"
+    ],
+    "buildpacks": [
+        {
+          "url": "heroku/nodejs"
+        }
+    ],
+    "env": {
+      "DISCORD_CLIENT_ID": {
+        "description": "Client ID of the bot (used to identify the bot)",
+        "required": true
+      },
+      "DISCORD_CLIENT_SECRET": {
+        "description": "Client Secret of the bot",
+        "required": true
+      },
+      "DISCORD_INTENTS": {
+        "description": "Intents of the bot (used to subscribe to events)",
+        "required": true
+      },
+      "DISCORD_PUBLIC_KEY": {
+        "description": "Public key of the bot",
+        "required": true
+      },
+      "DISCORD_TOKEN": {
+        "description": "Token of the bot (used to login to discord)",
+        "required": true
+      }
+    },
+    "stack": "container"
+  }

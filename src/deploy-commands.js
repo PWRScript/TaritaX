@@ -4,7 +4,11 @@ const { Routes } = require('discord-api-types/v9');
 const dotenv = require('dotenv');
 
 dotenv.config();
-const base_directory = './src/';
+
+let base_directory = './src/';
+if (!fs.existsSync('./src')) {
+	base_directory = './';
+}
 
 const commands = [];
 

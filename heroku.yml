@@ -5,3 +5,6 @@ release:
   image: worker
   command:
     - node src/deploy-commands.js
+
+run:
+  worker: node src/index.js

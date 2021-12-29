@@ -1,0 +1,5 @@
+DISCORD_CLIENT_ID=your-discord-client-id
+DISCORD_CLIENT_SECRET=your-discord-client-secret
+DISCORD_INTENTS=calculate-intents-on-https://discord-intents-calculator.vercel.app
+DISCORD_PUBLIC_KEY=your-discord-public-key-here
+DISCORD_TOKEN=your-discord-token-here

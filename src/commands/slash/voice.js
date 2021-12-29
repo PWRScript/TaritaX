@@ -102,7 +102,7 @@ module.exports = {
 				}
 
 				const game_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setTitle('Your voice activity is ready!').setURL(`https://discord.com/invite/${invite.code}`)
-					.setDescription('**' + games[interaction.options.getString('activity')] + '** on <#' + channel_vc_id + '>**\n[Click here]( https://discord.com/invite/' + invite.code + ' ) to join**')
+					.setDescription('**' + games[interaction.options.getString('activity')] + '** on <#' + channel_vc_id + '>**\n[Click here]( https://discord.com/invite/' + invite.code + ' ) to join**').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL())
                 ;
 				return interaction.reply({ embeds: [game_embed] });
 			});

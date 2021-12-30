@@ -31,6 +31,8 @@ module.exports = {
 				],
 			).setRequired(true))),
 
+	guild_only: true,
+
 	async execute(interaction) {
 
 		// Get channel id

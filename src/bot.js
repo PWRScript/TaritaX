@@ -1,10 +1,29 @@
 // Imports
 const fs = require('fs');
-const { Client, Collection } = require('discord.js');
+const { Client, Collection, MessageEmbed } = require('discord.js');
 const dotenv = require('dotenv');
+const { Manager } = require('erela.js');
 
 // Load Environment Variables
 dotenv.config();
+
+// Hardcoded lavalink list (should be refactored)
+const nodes = [
+	// EU Node
+	{
+		host: 'lavalink.eu',
+		password: 'Raccoon',
+		port: 2333,
+		secure: false,
+	},
+
+	// US Node
+	{
+		host: 'lava.link',
+		port: 80,
+		secure: false,
+	},
+];
 
 // Detect directory disposition
 let base_directory = './src/';
@@ -13,10 +32,18 @@ if (!fs.existsSync('./src')) {
 }
 
 // Declare client and distube
-const client = new Client({ intents: process.env.DISCORD_INTENTS });
+const client = new Client({ intents: process.env.DISCORD_INTENTS, presence: { activities:[{ name: '/help | Merry Christmas and Happy New Year!' }] } });
 client.slashCommands = new Collection();
 client.userCommands = new Collection();
 client.messageCommands = new Collection();
+client.lavalink = new Manager({
+	nodes,
+	autoPlay: true,
+	send: (id, payload) => {
+		const guild = client.guilds.cache.get(id);
+		if (guild) guild.shard.send(payload);
+	},
+});
 
 // Get events and commands
 const eventFiles = fs.readdirSync(base_directory + 'events').filter(file => file.endsWith('.js'));
@@ -52,6 +79,26 @@ for (const file of userCommandFiles) {
 	client.userCommands.set(command.data.name, command);
 }
 
+// Lavalink events
+client.lavalink.on('nodeConnect', node => {
+	console.log(`[LAVALINK-${node.options.identifier}] Connected to server successfuly`);
+});
+
+// Emitted whenever a node encountered an error
+client.lavalink.on('nodeError', (node, error) => {
+	console.log(`[LAVALINK-${node.options.identifier}] Error: ${error.message}.`);
+});
+
+// Emitted when a track starts
+client.lavalink.on('trackStart', (player, track) => {
+	// Handle this
+});
+
+// Emitted the player queue ends
+client.lavalink.on('queueEnd', player => {
+	player.destroy();
+});
+
 // Event to handle commands
 client.on('interactionCreate', async interaction => {
 	let command = null;
@@ -70,6 +117,17 @@ client.on('interactionCreate', async interaction => {
 	}
 
 	if (!command) return;
+
+	if (command.guild_only) {
+		const j_gc_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
+			'**You must only use this command in a guild!**',
+		).setTitle('❌ Guild Context Error').setFooter('Executed by ' + interaction.user.tag, interaction.user.displayAvatarURL(),
+		);
+
+		return interaction.reply(
+			{ embeds:  [j_gc_embed] },
+		);
+	}
 
 	try {
 		await command.execute(interaction);

@@ -39,7 +39,7 @@ if (!fs.existsSync('./src')) {
 }
 
 // Declare client and distube
-const client = new Client({ intents: process.env.DISCORD_INTENTS, presence: { activities:[{ name: '/help | Merry Christmas and Happy New Year!' }] } });
+const client = new Client({ intents: process.env.DISCORD_INTENTS, presence: { activities:[{ name: '/help | Happy New Year 2022!' }] } });
 client.slashCommands = new Collection();
 client.userCommands = new Collection();
 client.messageCommands = new Collection();
@@ -146,6 +146,7 @@ client.on('raw', (d) => client.lavalink.updateVoiceState(d));
 // Event to handle commands
 client.on('interactionCreate', async interaction => {
 	let command = null;
+
 
 	if (interaction.isCommand()) {
 		command = client.slashCommands.get(interaction.commandName);

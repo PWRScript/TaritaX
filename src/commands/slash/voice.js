@@ -34,6 +34,8 @@ module.exports = {
 	guild_only: true,
 
 	async execute(interaction) {
+		
+		await interaction.deferReply();
 
 		// Get channel id
 		let channel_vc_id = null;
@@ -47,7 +49,7 @@ module.exports = {
 			).setTitle('❌ Member Context Error').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL(),
 			);
 
-			return interaction.reply(
+			return interaction.editReply(
 				{ embeds:  [j_vc_embed] },
 			);
 		}
@@ -62,7 +64,7 @@ module.exports = {
 				'**Please ensure that you have [Start Activity](https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ) permissions in <#' + channel_vc_id + '> to execute this command**',
 			).setTitle('❌ Member Permissions Error').setURL('https://support.discord.com/hc/articles/206029707-Setting-Up-Permissions-FAQ').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL());
 
-			return interaction.reply(
+			return interaction.editReply(
 				{ embeds:  [m_embed] },
 			);
 		}
@@ -74,7 +76,7 @@ module.exports = {
 
 		if (!bot_permissions.has('CREATE_INSTANT_INVITE') || !bot_permissions.has('CREATE_INSTANT_INVITE') || !bot_permissions.has('CREATE_INSTANT_INVITE')) {
 
-			return interaction.reply(
+			return interaction.editReply(
 				{ embeds:  [p_embed] },
 			);
 		}
@@ -98,7 +100,7 @@ module.exports = {
 			.then((invite) => {
 				if (invite.error || !invite.code) throw new Error('An error occured while retrieving data !');
 				if (Number(invite.code) === 50013) {
-					return interaction.reply(
+					return interaction.editReply(
 						{ embeds:  [p_embed] },
 					);
 				}
@@ -106,7 +108,7 @@ module.exports = {
 				const game_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setTitle('Your voice activity is ready!').setURL(`https://discord.com/invite/${invite.code}`)
 					.setDescription('**' + games[interaction.options.getString('activity')] + '** on <#' + channel_vc_id + '>**\n[Click here]( https://discord.com/invite/' + invite.code + ' ) to join**').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL())
                 ;
-				return interaction.reply({ embeds: [game_embed] });
+				return interaction.editReply({ embeds: [game_embed] });
 			});
 
 

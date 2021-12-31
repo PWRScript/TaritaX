@@ -114,7 +114,7 @@ module.exports = {
 			});
 			const track = res.tracks[0];
 			// Connect to the voice channel and add the track to the queue
-			player.connect();
+			if (player.state !== 'CONNECTED') player.connect();
 			player.queue.add(track);
 
 
@@ -140,6 +140,16 @@ module.exports = {
 
 
 		}
+
+
+		const jy_vc_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
+			'**Wait some time until this command has been implemented by bot developers**',
+		).setTitle(':warning: Internal Bot Error').setFooter('Executed by ' + interaction.member.user.tag, interaction.member.user.displayAvatarURL(),
+		);
+
+		return interaction.editReply(
+			{ embeds:  [jy_vc_embed] },
+		);
 
 	},
 

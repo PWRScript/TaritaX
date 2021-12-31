@@ -24,12 +24,12 @@ const nodes = [
 	},
 
 	// US Node
-	{
-		host: 'lava.link',
-		port: 80,
-		secure: false,
-		identifier: 'voice-us-1',
-	},
+	// {
+	//	host: 'lava.link',
+	//	port: 80,
+	//	secure: false,
+	//	identifier: 'voice-us-1',
+	// },
 ];
 
 // Detect directory disposition
@@ -112,16 +112,27 @@ client.lavalink.on('trackStart', (player, track) => {
 			'**Title: **``' + track.title + '``\n**Uploaded by: **``' + track.author + '``\n**Duration: **``' + humanizeDuration(track.duration) + '``\n**Node: **``' + player.node.options.identifier + '``',
 		).setTitle('🔊 Now Playing').setFooter('Requested by ' + track.requester.tag, track.requester.displayAvatarURL(),
 		).setURL(track.uri).setImage(track.thumbnail);
-	} else {
-		
+	}
+	else {
+
 		p_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
 			'**Title: **``' + track.title + '``\n**Uploaded by: **``' + track.author + '``\n**Duration: **``Livestream``\n**Node: **``' + player.node.options.identifier + '``',
 		).setTitle(':loudspeaker: Now Streaming').setFooter('Requested by ' + track.requester.tag, track.requester.displayAvatarURL(),
 		).setURL(track.uri).setImage(track.thumbnail);
 	}
-	
+
 	// Send a message when the track starts playing with the track name and the requester's Discord tag, e.g. username#discriminator
 	channel.send({ embeds:[p_embed] });
+});
+
+// Emitted when a track can't be played
+client.lavalink.on('trackError', (player, track, payload) => {
+	const channel = client.channels.cache.get(player.textChannel);
+	const err_embed = new MessageEmbed().setColor('#991550').setTimestamp(Date.now()).setDescription(
+		'**Something went wrong when we tried to play the music:**\n```' + payload['error'] + '```',
+	).setTitle('❌ Music Playback Failed').setFooter('Executed by ' + track.requester.tag, track.requester.displayAvatarURL(),
+	);
+	channel.send({ embeds:[err_embed] });
 });
 
 // Emitted the player queue ends

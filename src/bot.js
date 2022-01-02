@@ -24,12 +24,12 @@ const nodes = [
 	},
 
 	// US Node
-	// {
-	//	host: 'lava.link',
-	//	port: 80,
-	//	secure: false,
-	//	identifier: 'voice-us-1',
-	// },
+	{
+		host: 'lava.link',
+		port: 80,
+		secure: false,
+		identifier: 'voice-us-1',
+	},
 ];
 
 // Detect directory disposition
